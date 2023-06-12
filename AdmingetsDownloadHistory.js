@@ -9,9 +9,10 @@ const AdmingetsDownloadHistory = () => {
   const contract3=Web3[1];
   const account3=Web3[0];
   const Web3ContractUsers=Web3Contract2();
-  // console.log(Web3Contract2);
   const contract2=Web3ContractUsers[1];
   const account2=Web3ContractUsers[0];
+  
+  console.log(contract3);
   const [myselect,setMyselect]=useState("");
     const [DataArray,setDataArray]=useState([]);
     const [DataArray2,setDataArray2]=useState([]);
@@ -30,11 +31,10 @@ const AdmingetsDownloadHistory = () => {
       const milliseconds = timestamp * 1000;
       const dateObject = new Date(milliseconds);
       const formattedTime = dateObject.toLocaleString();
-      // console.log(formattedTime);
       return(`${formattedTime}`);
   }
   const function1 = async () => {
-    window.contract3.methods.getdatausingPatch(myselect).call().then((res) => {
+    contract3.methods.getdatausingPatch(myselect).call().then((res) => {
         console.log(res);
         setDataArray2(res)
     })
@@ -44,7 +44,7 @@ const AdmingetsDownloadHistory = () => {
     recievepatchdata();
     function1();
     }
-  },[myselect])
+  },[contract2,contract3]);
 
   return (
     <div>

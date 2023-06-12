@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import Web3Contract2 from './Web3Contract2'
-import Web3Contract1 from './Web3Contract1';
-const DevelopergetsRequest = () => {
+const DevelopergetsRejectedPatches = () => {
   const Web3 = Web3Contract2();
   const contract2 = Web3[1];
   const account = Web3[0];
-  const Web3_1=Web3Contract1();
-  const contract=Web3_1[1];
-  const account1=Web3_1[0]
   let requestnoarr = [];
   const [dataArray, setdataArray] = useState([]);
   const getdata = async () => {
     try {
       await window.contract2.methods.getdetails().call().then((res) => {
         console.log(res.length + 1);
-        
         for (let i = 0; i < res.length; i++){
           requestnoarr.push(res[i].requestnumber);
         }
@@ -41,15 +36,13 @@ const DevelopergetsRequest = () => {
       <br /><br />
       <div className="container">
         <div className="text-center">
-
-
           <div className='container'>
             {dataArray.map((data, dataIndex) => {
               console.log(data.requestno);
+              console.log(dataArray);
               if (!requestnoarr.includes(data.requestno)) {
+
                 return (
-
-
                   <>
                     <div className='card'>
                       <div className='card-header bg-dark text-white d-flex justify-content-start '>
@@ -82,4 +75,4 @@ const DevelopergetsRequest = () => {
           
 }
 
-export default DevelopergetsRequest
+export default DevelopergetsRejectedPatches;

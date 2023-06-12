@@ -24,6 +24,9 @@ function AdminsendsRequest() {
 
 
     }
+    const SelectedBugsFeatures=()=>{
+
+    }
    
     return (
         <>
@@ -54,7 +57,6 @@ function AdminsendsRequest() {
                         <div className="row">
                             <h3 className="col-sm-6 mt-2" id="bugs_selection">
                                 Bugs
-
                                 <table className="table">
                                     <thead className="col-12">
                                         <tr>
@@ -68,7 +70,7 @@ function AdminsendsRequest() {
                                             return (
                                                 <>
                                                     {data.labelstatus.map((label, labelIndex) => {
-                                                        if (label == 1 && data.environmentDetails == select) {
+                                                        if (label==0 && data.bugspriority[labelIndex]!=0 && data.environmentDetails == select) {
                                                             return (
                                                                 <>
                                                                     <tr className="col-12 align-items-center">
@@ -117,8 +119,8 @@ function AdminsendsRequest() {
                                             return (
                                                 <>
                                                     {data.labelstatusfeatures.map((label, labelIndex) => {
-                                                        if (label == 1 && data.environmentDetails == select) {
-                                                            return (
+                                                        if (label == 0 && data.featurespriority[labelIndex]!=0 && data.environmentDetails == select) {
+                                                            return(
                                                                 <>
                                                                     <tr className="col-12 align-items-center">
                                                                         <td scope="col-1" className="col-1 ">
@@ -153,7 +155,7 @@ function AdminsendsRequest() {
                         <button
                             className="btn btn-dark mx-6 "
                             type="button"
-                            onClick="selectedonce()"
+                            onClick={SelectedBugsFeatures()}
                         >
                             selected Bugs and Features
                         </button>

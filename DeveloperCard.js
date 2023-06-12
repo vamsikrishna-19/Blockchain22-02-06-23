@@ -21,7 +21,7 @@ function DeveloperCard() {
                     </li>
                     <li className="nav-item mx-2 col-sm">
                         <button className="btn btn-dark" onClick={()=>{
-                          Navigate("/Developer/Rejectedpatches")
+                          Navigate("/Developer/Rejectedpatches");
                         }}>Developer Gets Rejected patches
                             Patches</button>
                     </li>

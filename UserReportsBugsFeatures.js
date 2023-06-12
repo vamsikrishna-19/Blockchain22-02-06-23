@@ -98,7 +98,6 @@ function UserReportBugsFeatures() {
     </div>
       <div className="container my-5">
         <div className=" text-center">
-          
           <div>
             <form action="/">
               <div className="container">

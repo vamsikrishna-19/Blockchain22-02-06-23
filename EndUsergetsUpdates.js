@@ -13,12 +13,12 @@ const EndUsergetsUpdates = () => {
 
 
     // }
-    const [dataArray, setdataArray] = useState([])
+    const [dataArray, setdataArray] = useState([]);
+    // const [sno,setSno]=useState(0);
     const setTime = (timestamp) => {
         const milliseconds = timestamp * 1000;
         const dateObject = new Date(milliseconds);
         const formattedTime = dateObject.toLocaleString();
-
         return formattedTime;
     }
     const Web3 = Web3Contract2();
@@ -58,14 +58,18 @@ const EndUsergetsUpdates = () => {
                             </tr>
                         </thead>
                         <tbody id="tbody">
+                            
                             {dataArray.map((data, dataIndex) => {
                                 console.log(dataArray);
+                                // setSno(sno+1);
                                 return (
                                     <>
                                         <tr>
 
                                             <td>
-                                                { }
+                                                {/* {sno} */}
+                                                {/* {i} */}
+                                                
                                             </td>
                                             <td>
                                                 {data.patchname}
@@ -89,6 +93,7 @@ const EndUsergetsUpdates = () => {
                                         </tr>
                                     </>
                                 )
+                                
                             })}
                         </tbody>
                     </table>

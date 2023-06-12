@@ -9,7 +9,7 @@ const AdminTrackingPatches = () => {
     const [dataArray, setdataArray] = useState([])
     const getdata = () => {
         try{
-        window.contract2.methods.getdetails().call().then((result) => {
+        contract2.methods.getdetails().call().then((result) => {
             setdataArray(result);
             console.log(result);
         });
@@ -60,7 +60,6 @@ const AdminTrackingPatches = () => {
                                     return (
                                         <>
                                             <tr>
-                                            
                                                 <td>{ }</td>
                                                 <td>{data.patchname}</td>
                                                 <td> Request No: {data.requestnumber}</td>

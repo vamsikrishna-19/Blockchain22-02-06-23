@@ -19,26 +19,27 @@ function Labellerpriority() {
     const [bugsdict, setBugdict] = useState({});
     const [featuredict, setFeaturedict] = useState({});
     const setDictionarybug = (selectedOption, selectedbug) => {
-        setBugdict({ ...bugsdict, selectedbug: selectedOption });
+        setBugdict((bugsdict)=>({ ...bugsdict, [selectedbug]: selectedOption }));
     }
     const setDictionaryfeature = (selectedOption, selectedfeature) => {
-        setFeaturedict({ ...featuredict, selectedfeature: selectedOption });
+        setFeaturedict((featuredict)=>({ ...featuredict, [selectedfeature]: selectedOption }));
     }
     const setprioritybugsfeatures = () => {
         console.log(bugsdict);
         console.log(featuredict);
-        if (Object.keys(bugsdict).length != 0 && Object.keys(featuredict).length != 0) {
+        console.log(Object.entries(bugsdict), Object.entries(featuredict))
+        if (Object.keys(bugsdict).length != 0 || Object.keys(featuredict).length != 0) {
             contract.methods.setbugfeaturePriority(Object.entries(bugsdict), Object.entries(featuredict)).send({ from: account }).then((result) => {
                 console.log(result);
-                const transactionsuccess = document.getElementById('TransactionSuccessfull');
-                const div = document.createElement('div');
-                div.classList.add("alert", "alert-primary");
-                div.role = "alert";
-                div.innerHTML = "Transaction Successfull with Transaction ID - " + `${result.transactionHash}`;
-                transactionsuccess.appendChild(div);
-                setTimeout(function () {
-                    window.location.reload();
-                }, 3000);
+                // const transactionsuccess = document.getElementById('TransactionSuccessfull');
+                // const div = document.createElement('div');
+                // div.classList.add("alert", "alert-primary");
+                // div.role = "alert";
+                // div.innerHTML = "Transaction Successfull with Transaction ID - " + `${result.transactionHash}`;
+                // transactionsuccess.appendChild(div);
+                // setTimeout(function () {
+                //     window.location.reload();
+                // }, 3000);
             });
         }
     }
@@ -110,15 +111,20 @@ function Labellerpriority() {
                                                 
                                                 <>
                                                     <ul className="list-group">
-                                                        {data.labelstatus.map((label, labelIndex) => {
-                                                            if (label == 0 && data.environmentDetails == select) {
+                                                        {data.bugspriority.map((label, labelIndex)=>{
+                                                            if (label == '0' && data.environmentDetails == select) {
                                                                 return (
                                                                     <>
                                                                         <li className="align-items-center d-flex justify-content-between col-12 list-group-item form-control" key={labelIndex}>{data.bugs[labelIndex]}</li>
 
                                                                         <select className="col-12 list-group-item" name="selectePriority" id="selectIndex" onChange={(event) => {
-                                                                            setSelectPrioritybug(event.target.value);
-                                                                            setDictionarybug(selectPrioritybug, data.bugs[labelIndex]);
+                                                                            const selectedOption = event.target.value;
+                                                                            const handleOnChangebugs = (selectedOption) => {
+                                                                             
+                                                                              setSelectPrioritybug(selectedOption);
+                                                                              setDictionarybug(selectedOption, data.bugs[labelIndex]);
+                                                                            };
+                                                                            handleOnChangebugs(selectedOption);
                                                                         }}>
                                                                             <option value="" selected>Select Priority</option>
                                                                             <option value="1">1</option>
@@ -149,14 +155,18 @@ function Labellerpriority() {
                                                 //   <li key={dataIndex}>
                                                 <>
                                                     <ul className="list-group">
-                                                        {data.labelstatusfeatures.map((labelfeature, labelIndexfeature) => {
+                                                        {data.featurespriority.map((labelfeature, labelIndexfeature) => {
                                                             if (labelfeature == 0 && data.environmentDetails == select) {
                                                                 return (
                                                                     <>
                                                                         <li className="align-items-center d-flex justify-content-between col-12 list-group-item form-control" key={labelIndexfeature}>{data.features[labelIndexfeature]}</li>
                                                                         <select className="col-12 list-group-item" name="selectePriority" id="selectIndex" onChange={(event) => {
-                                                                            setSelectPriorityfeature(event.target.value);
-                                                                            setDictionaryfeature(selectPriorityfeature, data.features[labelIndexfeature]);
+                                                                            const selectedOption=event.target.value;
+                                                                            const handleOnChangefeature=(selectedOption)=>{
+                                                                                setSelectPriorityfeature(selectedOption);
+                                                                                setDictionaryfeature(selectedOption, data.features[labelIndexfeature]);
+                                                                            }
+                                                                            handleOnChangefeature(selectedOption);
                                                                         }}>
                                                                             <option value="Select Priority" selected>Select Priority</option>
                                                                             <option value="1">1</option>

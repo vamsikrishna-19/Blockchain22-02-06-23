@@ -54,8 +54,8 @@ const LabelledBugsandFeatures = () => {
                           return (
                             <>
                               <li className="align-items-center d-flex justify-content-between col-12 list-group-item form-control" key={labelIndex}>{data.bugs[labelIndex]}</li>          
-                              <li className='input-group-item form-control my-select me-end p-2 d-inline-block d-flex justify-content-between'>
-
+                              <li className='input-group-item form-control my-select  p-2 d-inline-block d-flex justify-content-between'>
+                                  Proirity:  {data.bugspriority[labelIndex]}
                               </li>
                               <br />
                             </>
@@ -81,7 +81,9 @@ const LabelledBugsandFeatures = () => {
                           return (
                             <>
                               <li className="align-items-center d-flex justify-content-between col-12 list-group-item form-control" key={labelIndexfeature}>{data.features[labelIndexfeature]}</li>
-                              
+                              <li className='input-group-item form-control my-select  p-2 d-inline-block d-flex justify-content-between'>
+                                  Proirity:  {data.featurespriority[labelIndexfeature]}
+                              </li>
                               <br />
                             </>
                           )

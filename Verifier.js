@@ -20,7 +20,7 @@ const Verifier = () => {
         }
     }
     const connectcontract1 = async (patchname) => {
-        await window.contract2.methods.findandreply(patchname).send({ from: address }).then((result) => {
+        await contract2.methods.findandreply(patchname).send({ from: address }).then((result) => {
             const transactionsuccess = document.getElementById('TransactionSuccessfull');
             const div = document.createElement('div')
             div.classList.add("alert", "alert-primary");
