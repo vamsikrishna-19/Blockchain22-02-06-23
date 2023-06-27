@@ -46,7 +46,7 @@ const EndUsergetsUpdates = () => {
                 <div className="text-center">
                     <br />
                     <br />
-                    <table id="table1" className="table table-striped table-borderless">
+                    <table id="table1" className="table table-striped table-bordered table-responsive">
                         <thead className="thead-dark">
                             <tr>
                                 <th scope="col">S.No</th>
@@ -61,7 +61,7 @@ const EndUsergetsUpdates = () => {
                             
                             {dataArray.map((data, dataIndex) => {
                                 console.log(dataArray);
-                                // setSno(sno+1);
+                                // let sno=1;
                                 return (
                                     <>
                                         <tr>
@@ -69,6 +69,7 @@ const EndUsergetsUpdates = () => {
                                             <td>
                                                 {/* {sno} */}
                                                 {/* {i} */}
+                                                {dataIndex+1}
                                                 
                                             </td>
                                             <td>

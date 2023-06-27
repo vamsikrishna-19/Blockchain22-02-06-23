@@ -1,38 +1,71 @@
 import React, { useState, useEffect } from "react";
-// import Web3contract from "./web3contract1Enduser";
 import Web3Contract1 from "./Web3Contract1";
-// import Web3contract2 from "./web3contract2RegisterPatch";
 import Web3Contract2 from "./Web3Contract2";
-// import { get } from "prompt";
 function AdminsendsRequest() {
     const Web3 = Web3Contract1();
-    // const Web3Contract2 = Web3Contract2();
+    const Web3Contract = Web3Contract2();
     const [select, setSelect] = useState("");
     const [dataArray, setDataArray] = useState([]);
-    const [dataArray3, setDataArray3] = useState([]);
+    // const [dataArray3, setDataArray3] = useState([]);
     const contract = Web3[1];
     const account = Web3[0];
-
-    // console.log(contract)
+    const contract2=Web3Contract[1];
+    const account2=Web3Contract[0];
+    const [requestNo,setRequestNo]=useState(0);
     const handleOnChangeselect = async (event) => {
-
         setSelect(event.target.value);
         contract.methods.get().call().then((result) => {
             setDataArray(result);
-
         })
-
-
+        contract2.methods.getdetailsRequest().call().then((result) => {
+            
+            console.log(result);
+            setRequestNo(result.length+1);
+            
+        });
     }
-    const SelectedBugsFeatures=()=>{
-
+    const [date,setDate]=useState("");
+    const handleDate=(e)=>{
+        setDate(e.target.value)
     }
+    const requestdev=()=>{
+        contract.methods.setbugfeaturelabel(bugArray, featureArray).send({ from: account }).then((result) => {
+            console.log(result);
+        });
+        contract2.methods.setRequest(bugArray, featureArray, date, requestNo,select ).send({ from: account }).then((result) => {
+            console.log(result)
+        });
+    }
+    const [bugArray,setBugArray]=useState([]);
+    const handleOnChangeBugs=(bug)=>(event)=>{
+        const isChecked=event.target.checked;
+        if(isChecked){
+            setBugArray((prevbugs)=>[...prevbugs,bug]);
+        }
+        else{
+            setBugArray((prevbugs)=>prevbugs.filter((name)=>name!=bug));
+        }
+    }
+    const [featureArray,setfeatureArray]=useState([]);
+    const handleOnChangeFeatures=(feature)=>(event)=>{
+        const isCheckedfeature=event.target.checked;
+        if(isCheckedfeature){
+            setfeatureArray((prevFeatures)=>[...prevFeatures,feature]);
+
+        }
+        else{
+            setfeatureArray((prevFeatures)=>prevFeatures.filter((name)=>name!=feature));
+        }
+    }
+    const [showBugsFeatures,setShowBugsFeatures]=useState(false);
+    useEffect(()=>{
+        console.log(requestNo)
+    },[setRequestNo])
    
     return (
         <>
             <div className="container">
                 <div className="card">
-                    
                     <div className=" d-flex align-items-end my-5">
                         <div className="dropdown row mx-auto">
                             <label for="mySelect" className="col">
@@ -76,8 +109,7 @@ function AdminsendsRequest() {
                                                                     <tr className="col-12 align-items-center">
                                                                         <td scope="col-1" className="col-1 ">
                                                                             <div className="form-check">
-                                                                                <input className="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate" />
-
+                                                                                <input className="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate" onChange={()=>handleOnChangeBugs(data.bugs[labelIndex])}/>
                                                                             </div>
                                                                         </td>
                                                                         <td scope="col-9" className="col-9 justify-content-center">
@@ -85,23 +117,18 @@ function AdminsendsRequest() {
                                                                         </td>
                                                                         <td scope="col-2" className="col-2 justify-content-center">
                                                                             <li className="align-items-center d-flex justify-content-between col-12 list-group-item form-control" key={labelIndex}> <h6>  Priority:{data.bugspriority[labelIndex]}  </h6> </li>
-
                                                                         </td>
                                                                     </tr>
                                                                 </>
                                                             )
                                                         }
                                                     })}
-
                                                 </>
                                             )
                                         })
                                         }
                                     </tbody>
                                 </table>
-
-
-
                             </h3>
                             <h3 className="col-sm-6 mt-2" id="features_selection">
                                 Features:
@@ -125,8 +152,7 @@ function AdminsendsRequest() {
                                                                     <tr className="col-12 align-items-center">
                                                                         <td scope="col-1" className="col-1 ">
                                                                             <div className="form-check">
-                                                                                <input className="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate" />
-
+                                                                                <input className="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate" onChange={handleOnChangeFeatures(data.features[labelIndex])}/>
                                                                             </div>
                                                                         </td>
                                                                         <td scope="col-9" className="col-9 justify-content-center">
@@ -155,7 +181,9 @@ function AdminsendsRequest() {
                         <button
                             className="btn btn-dark mx-6 "
                             type="button"
-                            onClick={SelectedBugsFeatures()}
+                            onClick={()=>
+                                setShowBugsFeatures(true)
+                                }
                         >
                             selected Bugs and Features
                         </button>
@@ -174,11 +202,45 @@ function AdminsendsRequest() {
                                 </div>
 
                                 <div className="row">
-                                    <div className="col-6 mx-auto" id="selectedBugs">
+                                    <div className="col-6" id="selectedBugs">
                                         <h3>Bugs You Have Selected</h3>
+                                        {
+                                            showBugsFeatures && (
+                                                <ul>
+                                                    {bugArray.map((item,index)=>(
+                                                        <div>
+                                                     <br />
+                                                    <li key={index} className="form-control">
+                                                        {item}
+                                                    </li>
+                                                    </div>
+                                                    )      
+                                                    )}
+                                                </ul>
+                                            )
+                                        }
                                     </div>
-                                    <div className="col-6 mx-auto" id="selectedfeatures">
+                                    
+                                    <div className="col-6" id="selectedfeatures">
                                         <h3>Features You Have Selected</h3>
+                                   
+                                        {
+                                            showBugsFeatures && (
+                                                <ul>
+                                                    {
+                                                        featureArray.map((item,index)=>(
+                                                            <div>
+                                                                <br />
+                                                            <li key={index} className="form-control">
+                                                                {item}
+                                                            </li>
+                                                            <br />
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </ul>
+                                            )
+                                        }
                                     </div>
                                 </div>
                                 <div className="row my-5">
@@ -186,7 +248,7 @@ function AdminsendsRequest() {
                                         <label for="">
                                             <h5>Target Date</h5>
                                         </label>
-                                        <input type="date" className="mx-4" id="Date" />
+                                        <input type="date" onChange={handleDate}  className="mx-4" id="Date" />
                                     </div>
                                 </div>
                                 <div className="row my-5">
@@ -196,7 +258,9 @@ function AdminsendsRequest() {
                                         </label>
                                         <input
                                             type="number"
-                                            placeholder="1"
+                                            placeholder={requestNo}
+                                            value={requestNo}
+                                            readOnly={true}
                                             className="mx-4"
                                             id="RequestNo"
                                             readonly
@@ -204,11 +268,11 @@ function AdminsendsRequest() {
                                     </div>
                                 </div>
                                 <div className="row ">
-                                    <div className="col-6 mx-auto  ">
+                                    <div className="col-6 mb-4 mx-auto  ">
                                         <button
                                             className="btn btn-dark  mx-auto col-5"
                                             type="button"
-                                            onClick="requestdev()"
+                                            onClick={requestdev}
                                         >
                                             Send Request To Develeper
                                         </button>

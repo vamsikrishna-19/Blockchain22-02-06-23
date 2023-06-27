@@ -3,9 +3,12 @@ import { useNavigate } from 'react-router-dom'
 
 const Navbar = () => {
     const Navigate = useNavigate();
+    // const navbar={
+    //     backgroundColor:'#131921'
+    // }
     return (
         <>
-            <nav className="navbar navbar-expand-lg bg-dark">
+            <nav className="navbar navbar-expand-lg bg-dark" >
                 <div className="container-fluid">
                     <div className="navbar-brand text-white" href="#">PMS</div>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
@@ -44,13 +47,17 @@ const Navbar = () => {
                             </div>
 
                             <div className="nav-item">
-                                <button className="btn btn-dark" onClick="window.open('page1.html')">
+                                <button className="btn btn-dark" onClick={()=>{
+                                    Navigate('/Login')
+                                }}>
                                     LOG-IN
                                 </button>
                             </div>
                             <div className="nav-item">
-                                <button className="btn btn-dark" onClick="window.open('contact.html')">
-                                    CONTACT US
+                                <button className="btn btn-dark" onClick={()=>{
+                                    Navigate('/Signup')
+                                }}>
+                                    Sign-up
                                 </button>
                             </div>
                         </div>

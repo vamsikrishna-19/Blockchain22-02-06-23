@@ -8,7 +8,6 @@ const LabelledBugsandFeatures = () => {
   const contract = Web3[1];
   const account = Web3[0];
   async function handleOnChange(event) {
-
     setSelect(event.target.value);
     contract.methods.get().call().then((result) => {
       console.log(result);

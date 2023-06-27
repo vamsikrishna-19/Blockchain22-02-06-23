@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import Web3 from "web3";
-
+import Web3 from "web3"
 
 const Web3Contract1 = () => {
     const { ethereum } = window;
     const [contract, setContract] = useState(null);
     const [account, setAccount] = useState(null);
-    useEffect(() => {
+    useEffect(()=>{
         const connectMetamask = async () => {
-            if (window.ethereum !== "undefined") {
+            if (ethereum !== "undefined") {
                 const accounts = await ethereum.request({
                     method: "eth_requestAccounts",
                 });
@@ -226,9 +225,9 @@ const Web3Contract1 = () => {
                 }
             ];
             const Address = "0xbC59E6a52fA17C6bec9a4FDc09a518435cad2297";
-            window.web3 = new Web3(window.ethereum);
-            window.contract = await new window.web3.eth.Contract(ABI, Address);
-            setContract(window.contract);
+            const web3 = new Web3(ethereum);
+            const contract = new web3.eth.Contract(ABI, Address);
+            setContract(contract);
         };
         connectMetamask();
     }, []);

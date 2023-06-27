@@ -4,9 +4,12 @@ import { Outlet } from 'react-router-dom';
 
 const AdminCard = () => {
     const Navigate = useNavigate();
+    const navbarStyle = {
+        backgroundColor: '#d4bee8'
+      };
     return (
         <div className='container my-5 '>
-            <nav className='bg-dark p-1'>
+            <nav className=' p-1' style={navbarStyle}>
                 <ul className="nav nav-pills card-header-pills">
                     <li className="nav-item mx-2 col-sm">
                         <button className="btn btn-dark" onClick={() => {
