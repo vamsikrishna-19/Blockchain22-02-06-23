@@ -51,7 +51,8 @@ const UserReportBugsFeatures2 = () => {
         }
         console.log(data)
         try {
-            Axios.post("http://localhost:3000/Report", data, {
+            
+            Axios.post("http://localhost:3001/Report", data, {
                 headers: {
                     'Content-Type': 'application/json'
                 }

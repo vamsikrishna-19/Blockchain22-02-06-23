@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import Web3Contract1 from './Web3Contract1';
-
+import ConnectMetaMask from './ConnectMetaMask';
 const LabelledBugsandFeatures = () => {
   const [dataArray, setdataArray] = useState([]);
   const [select, setSelect] = useState("");
-  const Web3 = Web3Contract1();
-  const contract = Web3[1];
-  const account = Web3[0];
+  const Web3Contract = Web3Contract1();
+  const contract = Web3Contract[0];
+  const Account=ConnectMetaMask();
+  const account=Account[0];
   async function handleOnChange(event) {
     setSelect(event.target.value);
     contract.methods.get().call().then((result) => {

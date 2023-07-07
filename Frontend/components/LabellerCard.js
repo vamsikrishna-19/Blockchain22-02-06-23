@@ -20,13 +20,19 @@ const LabellerCard = () => {
           <li className="nav-item mx-2 col-sm">
             <button className="btn btn-dark" onClick={() => {
               Navigate("/Labeller");
-            }}>Yet to Label
+            }}>Yet To Label
             </button>
           </li>
           <li className="nav-item mx-2 col-sm">
             <button className="btn btn-dark" onClick={() => {
               Navigate("/Labeller/labelledBugsFeatures");
             }}>Labelled Bugs
+            </button>
+          </li>
+          <li className="nav-item mx-2 col-sm">
+            <button className="btn btn-dark" onClick={() => {
+              Navigate("/Labeller/transactionHistory");
+            }}>Transaction History
             </button>
           </li>
           

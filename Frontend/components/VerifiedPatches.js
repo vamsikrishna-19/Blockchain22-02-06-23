@@ -8,9 +8,7 @@ import "datatables.net-dt/css/jquery.dataTables.min.css"
 const VerifiedPatches = () => {
     const tableRef = useRef(null);
     const Web3 = Web3Contract2();
-    const contract2 = Web3[1];
-    const address = Web3[0];
-    // const web3=Web3[2];
+    const contract2 = Web3[0];
     const [dataArray, setdataArray] = useState([])
     const getdata = async () => {
         try {

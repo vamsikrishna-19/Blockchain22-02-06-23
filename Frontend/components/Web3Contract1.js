@@ -6,13 +6,8 @@ const Web3Contract1 = () => {
     const [contract, setContract] = useState(null);
     const [account, setAccount] = useState(null);
     useEffect(()=>{
-        const connectMetamask = async () => {
-            if (ethereum !== "undefined") {
-                const accounts = await ethereum.request({
-                    method: "eth_requestAccounts",
-                });
-                setAccount(accounts[0]);
-            }
+        const connectContract = async () => {
+            
             const ABI = [
                 {
                     "inputs": [],
@@ -229,8 +224,8 @@ const Web3Contract1 = () => {
             const contract = new web3.eth.Contract(ABI, Address);
             setContract(contract);
         };
-        connectMetamask();
+        connectContract();
     }, []);
-    return [account,contract];
+    return [contract];
 }
 export default Web3Contract1;

@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Web3Contract2 from './Web3Contract2';
 import $, { data } from 'jquery';
+import ConnectMetaMask from './ConnectMetaMask';
 import 'jquery/dist/jquery.min.js';
 import "datatables.net-dt/js/dataTables.dataTables"
 import "datatables.net-dt/css/jquery.dataTables.min.css"
 const AdminTrackingPatches = () => {
     const tableRef = useRef(null);
-    const Web3 = Web3Contract2();
-    const contract2 = Web3[1];
-    const address = Web3[0];
+    const Web3Contract = Web3Contract2();
+    const contract2 = Web3Contract[0];
+    const Account=ConnectMetaMask();
+    const account=Account[0];
     // const web3=Web3[2];
     const [dataArray, setdataArray] = useState([])
     const getdata = () => {
@@ -56,8 +58,10 @@ const AdminTrackingPatches = () => {
                             <thead className="thead-dark">
                                 <tr>
                                     <th scope="col">S.No</th>
-                                    <th scope="col">Patch Name</th>
                                     <th scope="col">Request No</th>
+                                    <th scope="col">Patch Name</th>
+                                    {/* <th scope="col">Patch Version</th> */}
+                                    <th scope="col">Patch Version</th>
                                     <th scope="col">Patch Platform</th>
                                     <th scope="col">Patch Features</th>
                                     <th scope="col">Registered Time</th>
@@ -71,12 +75,14 @@ const AdminTrackingPatches = () => {
                                         <>
                                             <tr>
                                                 <td>{dataIndex + 1}</td>
-                                                <td>{data.patchname}</td>
                                                 <td> Request No: {data.requestnumber}</td>
+                                                <td>{data.patchname}</td>
                                                 {/* <td>
                                                    
                                                     <button className='btn' onClick={downloadpatch(data.fileData)}>Download</button>
                                                 </td> */}
+                                                {/* <td>{data}</td> */}
+                                                <td>{data.version}</td>
                                                 <td>{data.patchplatform}</td>
                                                 <td>{data.patchfeatures}</td>
                                                 <td>{setTime(data.time)}</td>

@@ -20,7 +20,7 @@ const EndUserCard = () => {
           <li className="nav-item mx-2 col-sm">
             <button className="btn btn-dark" onClick={() => {
               Navigate("/EndUser/getUpdates")
-            }}> End User gets Updates
+            }}> End User Gets Updates
             </button>
           </li>
         </ul>
