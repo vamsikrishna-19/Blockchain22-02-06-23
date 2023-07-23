@@ -21,6 +21,7 @@ const UserDownloadHistory = require('./model/UsersDownloadHistory');
 //Middleware function for authorization of Labeller
 
 const authorizeMiddleware = (req, res, next) => {
+  console.log(req.headers.authorization);
   const token = req.headers.authorization.split(' ')[1];
   if (!token) {
     console.log("Token Missing");
@@ -39,6 +40,50 @@ const authorizeMiddleware = (req, res, next) => {
     res.status(403).json({ message: "Invalid Token or Token expired" });
   }
 };
+
+
+
+// const checkRoleMiddleware = (requiredRole) => {
+//   return (req, res, next) => {
+//     // console.log(requiredRole);
+//     console.log(req.headers.authorization);
+//     const { token } = req.headers.authorization.split(' ')[1];
+//     if (!token) {
+//       console.log("token Missing");
+//       return res.status(401).json({ message: "jwt token Missing" });
+//     }
+//     try {
+//       const decoded = jwt.verify(token, process.env.SECRETKEY);
+//       req.role = decoded.Role;
+//       next();
+//     }
+//     catch (error) {
+//       res.json(401).json({ message: "Invalid Token" });
+//     }
+//   }
+// }
+
+
+
+app.get('/api/role', (req, res) => {
+  console.log(req.headers.authorization);
+  const token = req.headers.authorization.replace('Bearer ', '');
+  if (!token) {
+    console.log("token Missing");
+    return res.status(401).json({ message: "jwt token Missing" });
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.SECRETKEY);
+    console.log(decoded.Role);
+    res.json(decoded.Role);
+  }
+  catch (error) {
+    res.json(401).json({ message: "Invalid Token" });
+  }
+})
+
+
+
 
 
 
@@ -261,7 +306,7 @@ app.get('/getDownloadHistory', async (req, res) => {
   console.log(req.query);
   const { Username } = req.query;
   const db = mongoose.connection.useDb("PMS");
-  db.collection('downloadhistories').find({Username:Username}).toArray()
+  db.collection('downloadhistories').find({ Username: Username }).toArray()
     .then((data) => {
       if (data.length === 0) {
         res.status(404).json({ message: 'No data found for given username' });
@@ -276,21 +321,21 @@ app.get('/getDownloadHistory', async (req, res) => {
 
 })
 // http://localhost/getdownloadHistory/patchname
-app.get('/getdownloadHistory/patchname',async(req,res)=>{
+app.get('/getdownloadHistory/patchname', async (req, res) => {
   console.log(req.query);
-  const { Patchname }=req.query;
-  const db=mongoose.connection.useDb("PMS");
-  db.collection('downloadhistories').find({Patchname:Patchname}).toArray()
-  .then((data)=>{
-    if(data.length===0){
-      res.status(404).json({message:"No data found for given patchname"});
-        }
-        else{
-          res.status(200).json(data);
-        }
-  }).catch((error)=>{
-    res.status(500).json({message:"Error finding data",error:error.message});
-  })
+  const { Patchname } = req.query;
+  const db = mongoose.connection.useDb("PMS");
+  db.collection('downloadhistories').find({ Patchname: Patchname }).toArray()
+    .then((data) => {
+      if (data.length === 0) {
+        res.status(404).json({ message: "No data found for given patchname" });
+      }
+      else {
+        res.status(200).json(data);
+      }
+    }).catch((error) => {
+      res.status(500).json({ message: "Error finding data", error: error.message });
+    })
 })
 
 app.post('/authentication', async (req, res) => {
