@@ -11,7 +11,6 @@ const TransactionHistory = () => {
     const formatDate = (value) => {
         const transactionTimeString = value;
         const transactionTime = new Date(transactionTimeString);
-
         const options = {
             year: 'numeric',
             month: 'long',
@@ -26,14 +25,17 @@ const TransactionHistory = () => {
     // const handleGoBack = () => {
     //     history.goBack();
     //   };
+    
+
     return (
         <div>
             <br />
             <div className="container">
+                
                 <div className="row justify-content-center">
                     <div className="col-md-10">
                         <div className="card">
-                            <div className="card-body">
+                            <div className="card-body" style={{border:" 2px solid #aad4db"}}>
                                 <h4 className="card-title text-center mb-4">
                                     <b>Transaction Details</b>
                                 </h4>

@@ -3,11 +3,8 @@ import Web3Contract2 from './Web3Contract2';
 import { Web3Storage } from 'web3.storage';
 import Axios from 'axios';
 const EndUsergetsUpdates = () => {
-
-
-   
     const [dataArray, setdataArray] = useState([]);
-    const [dataArray2,setDataArray2]=useState([]);
+    const [dataArray2, setDataArray2] = useState([]);
     const setTime = (timestamp) => {
         const milliseconds = timestamp * 1000;
         const dateObject = new Date(milliseconds);
@@ -24,13 +21,12 @@ const EndUsergetsUpdates = () => {
         link.click();
         document.body.removeChild(link);
     }
-    const downloadpatch = async (fileData,patchname) => {
+    const downloadpatch = async (fileData, patchname) => {
         console.log(fileData);
         console.log(patchname);
         console.log(sessionStorage.getItem("Username"));
         try {
-            const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhDMEM5NjY3QThhNzQzMkNEQWU1Mzk1NDBBOWFiMUVFRmQwRjg0QzEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODI2ODA4MzI1MzAsIm5hbWUiOiJwYXRjaG1hbmFnZW1lbnRibG9ja2NoYWluIn0.dzfBAy3YnAQ2xayUCm8o3jpht8xWVHdVDbovUno_9qM";
-            const client = new Web3Storage({ token: apiKey });
+            const client = new Web3Storage({ token: process.env.REACT_APP_API_KEY });
             const data = await client.get(fileData);
             const files = await data.files();
             if (files && files.length > 0) {
@@ -38,14 +34,14 @@ const EndUsergetsUpdates = () => {
                 const fileName = file.name;
                 const fileDownloadURl = URL.createObjectURL(file);
                 downloadFile(fileDownloadURl, fileName);
-                try{
-                   const res=await Axios.post('http://localhost:3001/downloadPatch',{
-                        Username:sessionStorage.getItem("Username"),
-                        Patchname:patchname
+                try {
+                    const res = await Axios.post('http://localhost:3001/downloadPatch', {
+                        Username: sessionStorage.getItem("Username"),
+                        Patchname: patchname
                     })
                     console.log(res.data);
                 }
-                catch(error){
+                catch (error) {
                     console.log(error);
                 }
             }
@@ -57,31 +53,40 @@ const EndUsergetsUpdates = () => {
             console.log(error);
         }
     }
-
+    let i = 1;
+    const [ObjectPatchImportance, setObjectPatchImportance] = useState({});
     useEffect(() => {
-        const getdata = async() => {
+        const getdata = async () => {
             console.log(contract2);
-            try{
+            try {
                 contract2.methods.getdetails().call().then((result) => {
                     setdataArray(result);
                     console.log(result);
-                }).catch((err)=>{
+                }).catch((err) => {
                     console.log(err);
                 });
-                const username=sessionStorage.getItem("Username");
+                contract2.methods.getImportance().call().then((result) => {
+                    console.log(result);
+                    result.forEach(item => {
+                        setObjectPatchImportance(prevState => ({
+                            ...prevState,
+                            [item.patchname]: item.crutiality
+                        }));
+                    });
+
+                })
+                const username = sessionStorage.getItem("Username");
                 console.log(username);
-                try{
-                    const res=await Axios.get("http://localhost:3001/getDownloadHistory",{
+                try {
+                    const res = await Axios.get("http://localhost:3001/getDownloadHistory", {
                         params: {
                             Username: username,
-                          },
+                        },
                     });
-        
-                    console.log("vamsi")
                     console.log(res);
                     setDataArray2(res.data);
                 }
-                catch(error){
+                catch (error) {
                     console.log(error);
                 }
             }
@@ -97,11 +102,13 @@ const EndUsergetsUpdates = () => {
                 <div className="text-center">
                     <br />
                     <br />
+                    <div className='table-responsive'>
                     <table id="table1" className="table table-striped table-bordered table-responsive">
                         <thead className="thead-dark">
                             <tr>
-                                {/* <th scope="col">S.No</th> */}
+                                <th scope="col">S.No</th>
                                 <th scope="col">Patch Name</th>
+                                <th scope="col">Patch Significance</th>
                                 <th scope="col">Patch Platform</th>
                                 <th scope="col">Patch Features</th>
                                 <th scope="col">Registered Time</th>
@@ -118,13 +125,61 @@ const EndUsergetsUpdates = () => {
                                         <>
                                             <tr>
 
-                                                {/* <td>
-                                                    
-                                                    {dataIndex + 1}
-                                                </td> */}
+                                                <td>
+
+                                                    {i++}
+                                                </td>
                                                 <td>
                                                     {data.patchname}
                                                 </td>
+                                                {
+                                                    ObjectPatchImportance[data.patchname] == "High" && (
+                                                        <>
+                                                            <td style={{ color: "#FF00FF" }}>
+                                                                {
+                                                                    ObjectPatchImportance[data.patchname]
+                                                                }
+                                                            </td>
+                                                        </>
+
+                                                    )
+                                                }
+                                                {
+                                                    ObjectPatchImportance[data.patchname] == "Critical" && (
+                                                        <>
+                                                            <td style={{ color: "red" }}>
+                                                                {
+                                                                    ObjectPatchImportance[data.patchname]
+                                                                }
+                                                            </td>
+                                                        </>
+
+                                                    )
+                                                }
+                                                {
+                                                    ObjectPatchImportance[data.patchname] == "Medium" && (
+                                                        <>
+                                                            <td style={{ color: "yellow" }}>
+                                                                {
+                                                                    ObjectPatchImportance[data.patchname]
+                                                                }
+                                                            </td>
+                                                        </>
+
+                                                    )
+                                                }
+                                                {
+                                                    ObjectPatchImportance[data.patchname] == "Low" && (
+                                                        <>
+                                                            <td style={{ color: "blue" }}>
+                                                                {
+                                                                    ObjectPatchImportance[data.patchname]
+                                                                }
+                                                            </td>
+                                                        </>
+
+                                                    )
+                                                }
                                                 {/* <td>
                                                    
                                                     <button className='btn' onClick={downloadpatch(data.fileData)}>Download</button>
@@ -136,23 +191,32 @@ const EndUsergetsUpdates = () => {
                                                     {data.patchfeatures}
                                                 </td>
                                                 <td>
-                                                    {setTime(data.deployedTimeStamp)}
+                                                    {setTime(Number(data.deployedTimeStamp))}
                                                 </td>
                                                 <td >
                                                     <button className='btn btn-success' onClick={() => {
-                                                            downloadpatch(data.fileData,data.patchname);
-                                                           
+                                                        downloadpatch(data.fileData, data.patchname);
+
                                                     }
                                                     }>Download</button>
                                                 </td>
                                             </tr>
                                         </>
                                     )
-                                
                             })}
                         </tbody>
                     </table>
+                    </div>
                 </div>
+            {
+                i == 1 && (
+                    <div>
+                        <b>
+                            No Patches Available
+                        </b>
+                    </div>
+                )
+            }
             </div>
         </div>
     )

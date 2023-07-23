@@ -1,43 +1,57 @@
 import React, { useState, useEffect } from "react";
 import Web3 from "web3";
-
 import Axios from 'axios';
-import Web3Contract1 from "./Web3Contract1";
+import Web3Contract2 from "./Web3Contract2";
 import ConnectMetaMask from "./ConnectMetaMask";
-function LabellerSolvesUserFeedBack() {
-    
+function LabellerSolvesUserFeedBack(props) {
+
     const [selectPrioritybug, setSelectPrioritybug] = useState("");
     const [selectPriorityfeature, setSelectPriorityfeature] = useState("");
-    const Web3 = require('web3');
-
-
-    const web3 = new Web3('HTTP://127.0.0.1:7545');
-
-
-
+    // const Web3 = require('web3');
+    const web3 = new Web3(window.ethereum);
     const [dataArray, setdataArray] = useState([]);
     const [select, setSelect] = useState("");
-    const Web3Contract = Web3Contract1();
-    const Account=ConnectMetaMask();
-    const account=Account[0];
-    const contract = Web3Contract[0];
-    async function handleOnChange(event) {
+    const Web3Contract = Web3Contract2();
+    const Account = ConnectMetaMask();
+    const account = Account[0];
+    const contract2 = Web3Contract[0];
+    const [BugCount, setBugCount] = useState(0);
+    const [FeatureCount, setFeatureCount] = useState(0);
+    async function handleOnChange(event){
         setSelect(event.target.value);
-        // contract.methods.get().call().then((result) => {
-        // 	console.log(result);
-        // 	setdataArray(result);
-        // })http://localhost:3001/api/data
         const response = await Axios.get('http://localhost:3001/api/data', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
         setdataArray(response.data);
+        let BugCount1 = 0;
+        response.data.map((data, dataIndex) => {
+            {
+                data.Bugs.map((label, labelIndex) => {
+                    if (data.Software == event.target.value) {
+                        BugCount1++;
+                    }
+                }
+                )
+            }
+        });
+        setBugCount(BugCount1);
+        console.log(BugCount1);
+        let FeatureCount1 = 0;
+        response.data.map((data, dataIndex) => {
+            {
+                data.Features.map((label, labelIndex) => {
+                    if (data.Software == event.target.value) {
+                        FeatureCount1++;
+                    }
+                })
+            }
+            setFeatureCount(FeatureCount1);
+        })
+        console.log(FeatureCount1);
         console.log(response.data);
     }
-
-
-   
     const token = sessionStorage.getItem("token");
     console.log(token);
     const setBugsAndFeatures = async () => {
@@ -45,34 +59,31 @@ function LabellerSolvesUserFeedBack() {
         const username = sessionStorage.getItem('Username');
         console.log(tobeSentBug);
         console.log(tobeSentFeature);
-        contract.methods.feedbacks(tobeSentBug, tobeSentFeature, select).send({ from: account }).then(async (result) => {
+        if(contract2){
+        contract2.methods.feedbacks(tobeSentBug, tobeSentFeature, select).send({ from: account }).then(async (result) => {
             console.log(result);
-            web3.eth.getTransactionReceipt(result.transactionHash, async (error, receipt) => {
-                if (error) {
-                    console.log("Error occured while getting transaction Reciept", error);
-                }
-                console.log(receipt);
-                try {
-                    const res = await Axios.post('http://localhost:3001/TransactionHistory', {
-                        usertype: usertype,
-                        username: username,
-                        status: receipt.status,
-                        transactionHash: result.transactionHash,
-                        blockHash: receipt.blockHash,
-                        contractAddress: receipt.contractAddress,
-                        blockNumber: receipt.blockNumber,
-                        gasUsed: receipt.gasUsed,
-                        from: receipt.from,
-                        to: receipt.to,
-                        typeOfTransaction: "Sent organized feedback to ethereum blockchain"
-                    },
-                    );
-                    console.log(res.data);
-                }
-                catch (error) {
-                    console.log(error);
-                }
-            });
+            const receipt = await web3.eth.getTransactionReceipt(result.transactionHash);
+            console.log(receipt);
+            try {
+                const res = await Axios.post('http://localhost:3001/TransactionHistory', {
+                    usertype: usertype,
+                    username: username,
+                    status: Number(receipt.status),
+                    transactionHash: result.transactionHash,
+                    blockHash: receipt.blockHash,
+                    contractAddress: receipt.contractAddress,
+                    blockNumber: Number(receipt.blockNumber),
+                    gasUsed: Number(receipt.gasUsed),
+                    from: receipt.from,
+                    to: receipt.to,
+                    typeOfTransaction: "Sent organized feedback to ethereum blockchain"
+                },
+                );
+                console.log(res.data);
+            }
+            catch (error) {
+                console.log(error);
+            }
             try {
                 const response = await Axios.delete('http://localhost:3001/deleteBugsFeatures', {
                     data: {
@@ -86,12 +97,48 @@ function LabellerSolvesUserFeedBack() {
             catch (error) {
                 console.error(error);
             }
-
+            props.showAlert(`Transaction was Successful with Transaction Hash ${result.transactionHash}.Gas Used : ${result.gasUsed}`, "success");
+            window.location.reload();
+        }).catch(async (error) => {
+            try {
+                const jsonString = error.message;
+                console.log(error.message);
+                const hashIndex = jsonString.indexOf('"hash":"');
+                const start = hashIndex + 8;
+                const end = jsonString.indexOf('"', start);
+                const hash = jsonString.substring(start, end);
+                console.log("Hash value:", hash);
+                const receipt = await web3.eth.getTransactionReceipt(hash);
+                console.log(receipt);
+                try {
+                    const res = await Axios.post('http://localhost:3001/TransactionHistory', {
+                        usertype: usertype,
+                        username: username,
+                        status: Number(receipt.status),
+                        transactionHash: hash,
+                        blockHash: receipt.blockHash,
+                        contractAddress: receipt.contractAddress,
+                        blockNumber: Number(receipt.blockNumber),
+                        gasUsed: Number(receipt.gasUsed),
+                        from: receipt.from,
+                        to: receipt.to,
+                        typeOfTransaction: "Transaction Failed due to wrong account in use",
+                    },
+                    );
+                    console.log(res.data);
+                    props.showAlert(`Transaction failed with Transaction Hash ${hash}.Gas Used : ${receipt.gasUsed}`, "warning");
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
         });
-
+    }
     }
     const handleDeleteBug = async (tobeSentBug) => {
-        // delete Bug from mongo database
         try {
             const token = sessionStorage.getItem("token");
             console.log(token);
@@ -100,15 +147,15 @@ function LabellerSolvesUserFeedBack() {
                     data: {
                         tobeDeleted: tobeSentBug,
                     }
-                },
-                {
 
+                    ,
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        authorization: `Bearer ${token}`
                     }
                 }
             )
             console.log(response.data);
+            window.location.reload();
         }
         catch (error) {
             console.error(error);
@@ -124,14 +171,14 @@ function LabellerSolvesUserFeedBack() {
                     data: {
                         tobeDeleted: tobeSentFeature,
                     }
-                },
-                {
+                    ,
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 }
             )
             console.log(response.data);
+            window.location.reload();
         }
         catch (error) {
             console.error(error);
@@ -141,7 +188,6 @@ function LabellerSolvesUserFeedBack() {
     const [tobeSentBug, settobeSentBugs] = useState([]);
     const handleCheckedInputsBugs = (e, bug) => {
         if (e.target.checked) {
-
             settobeSentBugs((prev) => [...prev, bug]);
         }
         else {
@@ -161,7 +207,6 @@ function LabellerSolvesUserFeedBack() {
 
 
     useEffect(() => {
-
     }, []);
     const [selectedBugToChange, setSelectedBugToChange] = useState("");
     const [selectedFeatureToChange, setSelectedFeatureToChange] = useState("");
@@ -237,16 +282,14 @@ function LabellerSolvesUserFeedBack() {
     return (
         <>
 
-            <br /><br /><br />
-
+            <br />
             <div className="container">
                 <div className="text-center">
-
                     <div>
                         <div className="container">
                             <div className=" d-flex align-items-end">
                                 <div className="dropdown row mx-auto">
-                                    <select id="mySelect" className="form-control col-6" value={select} onChange={handleOnChange}>
+                                    <select id="mySelect" className="form-control col-6" style={{fontWeight:"bold"}} value={select} onChange={handleOnChange}>
                                         <option value="Select Software" selected>Select Software</option>
                                         <option value="Windows11">Windows11</option>
                                         <option value="Windows10">Windows10</option>
@@ -259,6 +302,18 @@ function LabellerSolvesUserFeedBack() {
                             <div className="row">
                                 <div className="col-md-6">
                                     <h2 className="">Bugs</h2>
+                                    <br />
+                                    {
+                                        
+                                        BugCount == 0 && select!="Select Priority" && select!="" && (
+                                            <>
+                                                <b className="my-4">
+                                                    No data Available
+                                                </b>
+                                            </>
+                                        )
+                                    }
+                                    <br />
                                     <ol className="bordered-list">
                                         {dataArray.map((data, dataIndex) => {
                                             return (
@@ -266,7 +321,6 @@ function LabellerSolvesUserFeedBack() {
                                                     <ul className="list-group">
                                                         {data.Bugs.map((label, labelIndex) => {
                                                             if (data.Software == select) {
-
                                                                 return (
                                                                     <>
                                                                         <div className="row form-group">
@@ -281,28 +335,27 @@ function LabellerSolvesUserFeedBack() {
                                                                                 </div>
                                                                             </div>
 
-                                                                            <div className="col-9">
-                                                                                <input type="text" className="align-items-center  form-control" aria-describedby="delete" key={labelIndex} value={data.Bugs[labelIndex]} />
+                                                                            <div className="col-9" >
+                                                                                <input type="text" className="align-items-center  form-control" aria-describedby="delete" key={labelIndex} value={data.Bugs[labelIndex]}  />
                                                                             </div>
                                                                             <div className="col-1">
 
-                                                                                <button className="input-group-text  d-flex  align-items-center" data-bs-toggle="modal" data-bs-target="#exampleModalBug" data-bs-whatever="@mdo" onClick={() => {
+                                                                                <button className="input-group-text  d-flex  align-items-center" data-bs-toggle="modal" data-bs-target="#exampleModalBug" onClick={() => {
                                                                                     // handleDeleteBug(data.Bugs[labelIndex]);
                                                                                     setSelectedBugToChange(data.Bugs[labelIndex]);
                                                                                     // setNewBug("");
-                                                                                }} id="delete">
+                                                                                }} id="bug">
                                                                                     <span>
-                                                                                        <i className="zmdi zmdi-edit hc-2x"></i>
+                                                                                        <i className="zmdi zmdi-edit hc-2x " style={{color:"blue"}}></i>
                                                                                     </span>
                                                                                 </button>
                                                                             </div>
                                                                             <div className="col-1">
-
                                                                                 <button className="input-group-text c d-flex  align-items-center" onClick={() => {
                                                                                     handleDeleteBug(data.Bugs[labelIndex])
                                                                                 }} id="delete">
                                                                                     <span>
-                                                                                        <i className="zmdi zmdi-delete hc-2x"></i>
+                                                                                        <i className="zmdi zmdi-delete hc-2x" style={{color:"red"}}></i>
                                                                                     </span>
                                                                                 </button>
                                                                             </div>
@@ -369,6 +422,17 @@ function LabellerSolvesUserFeedBack() {
                                 </div>
                                 <div className="col-md-6">
                                     <h2 className="">Features</h2>
+                                   <br />
+                                    {
+                                        FeatureCount == 0 && select!="Select Priority" && select!="" && (
+                                            <>
+                                                <b className="my-4">
+                                                    No data Available
+                                                </b>
+                                            </>
+                                        )
+                                    }
+                                    <br />
                                     <ol className="bordered-list" >
                                         {dataArray.map((data, dataIndex) => {
                                             return (
@@ -401,7 +465,7 @@ function LabellerSolvesUserFeedBack() {
                                                                                     setNewFeature("");
                                                                                 }} id="Edit">
                                                                                     <span>
-                                                                                        <i className="zmdi zmdi-edit hc-2x"></i>
+                                                                                        <i className="zmdi zmdi-edit hc-2x" style={{color:"blue"}}></i>
                                                                                     </span>
                                                                                 </button>
                                                                             </div>
@@ -411,7 +475,7 @@ function LabellerSolvesUserFeedBack() {
                                                                                     handleDeleteFeature(data.Features[labelIndex])
                                                                                 }} id="delete">
                                                                                     <span>
-                                                                                        <i className="zmdi zmdi-delete hc-2x"></i>
+                                                                                        <i className="zmdi zmdi-delete hc-2x" style={{color:"red"}}></i>
                                                                                     </span>
                                                                                 </button>
                                                                             </div>
@@ -474,7 +538,7 @@ function LabellerSolvesUserFeedBack() {
                             </div>
 
                             <div>
-                                <button className="btn btn-dark" onClick={setBugsAndFeatures}> Select user feedback</button>
+                                <button className="btn btn-dark" onClick={setBugsAndFeatures}> submit</button>
                             </div>
                         </div>
                     </div>

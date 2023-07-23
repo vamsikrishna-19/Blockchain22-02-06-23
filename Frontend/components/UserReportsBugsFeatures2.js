@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Axios from "axios";
 
-const UserReportBugsFeatures2 = () => {
+const UserReportBugsFeatures2 = (props) => {
     // const Web3 = Web3Contract1();
     // const contract = Web3[1];
     // const account = Web3[0];
@@ -36,20 +36,13 @@ const UserReportBugsFeatures2 = () => {
         )
     }
     const sendfeedback = () => {
-
-        // contract.methods
-        //     .feedbacks(bugs, features, environmentdetails)
-        //     .send({ from: account })
-        //     .then((result) => {
-        //         console.log(result);
-
-        //     });
+        if(environmentdetails!=''){
         const data = {
             Software: environmentdetails,
             Bugs: bugs,
             Features: features
         }
-        console.log(data)
+        console.log(data);
         try {
             
             Axios.post("http://localhost:3001/Report", data, {
@@ -60,11 +53,16 @@ const UserReportBugsFeatures2 = () => {
             setBugs([""]);
             setFeatures([""]);
             setEnvironmetDetails("");
-
+            props.showAlert(`Feed Back reported successfully`,"success");
         }
         catch (error) {
             console.log("Error Uploading data");
+            props.showAlert(`Error reporting feedback`,"warning");
         }
+    }
+    else{
+        props.showAlert(`Select the software`,"warning");
+    }
     };
     const handleSelect = (e) => {
         setEnvironmetDetails(e.target.value)
@@ -79,18 +77,12 @@ const UserReportBugsFeatures2 = () => {
         updatedFeatures[index] = value;
         setFeatures(updatedFeatures);
     };
-
     return (
         <div className='container col-6'>
-
-
-        
-
-
             <div className="row mb-4 my-4 align-items-end">
                 <br /><br />
-                <label for="environmentdetails1" className="col-lg-3">
-                    <h3 id="environmentdetails1"> Applications:</h3>
+                <label htmlFor="environmentdetails1" className="col-lg-5">
+                    <h3 id="environmentdetails1"> Select Software:</h3>
                 </label>
                 <div className="col-12 col-lg-12 ">
                     <div className="form-group">
@@ -99,8 +91,9 @@ const UserReportBugsFeatures2 = () => {
                             value={environmentdetails}
                             className="form-control col-6"
                             onChange={handleSelect}
+                            required
                         >
-                            <option selected>
+                            <option value="" selected>
                                 Select Software
                             </option>
                             <option value="Windows11">Windows11</option>

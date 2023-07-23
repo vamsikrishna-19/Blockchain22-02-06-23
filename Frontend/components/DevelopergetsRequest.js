@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import Web3Contract2 from './Web3Contract2'
-import Web3Contract1 from './Web3Contract1';
+// import Web3Contract1 from './Web3Contract1';
 import { useNavigate } from 'react-router-dom';
-const DevelopergetsRequest = ({ RequestCount }) => {
+const DevelopergetsRequest = () => {
   const Navigate = useNavigate();
   const Web3Contract = Web3Contract2();
   const contract2 = Web3Contract[0];
-  const Web3_1 = Web3Contract1();
-  const contract = Web3_1[0];
+  // const Web3_1 = Web3Contract1();
+  // const contract = Web3_1[0];
   const [flag, setFlag] = useState(false);
   let requestnoarr = [];
   const [requestNumberArr, setrequestNumberArr] = useState([])
@@ -31,6 +31,17 @@ const DevelopergetsRequest = ({ RequestCount }) => {
       console.error(error);
     }
   }
+  const formatDate = (value) => {
+    const transactionTimeString = value;
+    const transactionTime = new Date(transactionTimeString);
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    };
+
+    return transactionTime.toLocaleDateString('en-US', options);
+  };
   useEffect(() => {
     getdata();
   }, [contract2]);
@@ -40,14 +51,13 @@ const DevelopergetsRequest = ({ RequestCount }) => {
     const flag = dataArray.some((data) => !requestNumberArr.includes(data.requestno));
     setFlag(flag);
     let count = 0;
-
-    dataArray.map((data, dataIndex) => {
+    dataArray.map((data) => {
       console.log(data.bugs);
       if (!requestNumberArr.includes(data.requestno)) {
         count += 1;
       }
     })
-    RequestCount(count);
+    // RequestCount(count);
 
   }, [dataArray, requestNumberArr]);
   return (
@@ -62,70 +72,110 @@ const DevelopergetsRequest = ({ RequestCount }) => {
             {dataArray.map((data, dataIndex) => {
               console.log(data.bugs);
               if (!requestNumberArr.includes(data.requestno)) {
-
-
-
                 return (
                   <>
-                    <div className='card'>
-                      <div className='card-header bg-dark text-white d-flex justify-content-start '>
+                    <div className='card' style={{ borderColor: "darkviolet" }}>
+                      <div className='card-header  text-white d-flex justify-content-start ' style={{ backgroundColor: "violet" }}>
                         <b>
                           <h4>
 
-                            Request No-{data.requestno}
+                            Request No-{Number(data.requestno)}
                           </h4>
                         </b>
                       </div>
                       <br />
                       <div className='card-body'>
-                        <h5 className='d-flex justify-content-start'>
-                          <b>
-                            Bugs:
-                          </b>
-                          <p>
+                        <div className='row'>
+                          <div className='col-6'>
+                            <div className='d-flex justify-content-start'>
+                              <h5 className='col-4'>
 
-                            {data.bugs.join(',')}
-                          </p>
+                                <b style={{ color: '' }}>
+                                  Bugs:
+                                </b>
+                              </h5>
+                              <div className=' d-flex justify-content-start col-8'>
 
-                        </h5>
+                                <ul>
+
+                                  {data.bugs.map((d, dIndex) => {
+                                    return (
+                                      <>
+                                        <li key={dIndex}>
+                                          {d}
+                                        </li>
+
+                                      </>
+                                    );
+                                  })}
+
+                                </ul>
+                                {/* {data.bugs.join(',')} */}
+                              </div>
+                            </div>
+                          </div>
+                          {/* style={{ color: '' }} */}
+                          <div className='col-6'>
+                            <div className='d-flex justify-content-start'>
+                              <h5 className='mx-2 col-3'>
+                                <b style={{ color: '' }}>
+                                  Features:
+                                </b>
+                              </h5>
+                              <div className='d-flex justify-content-start col-9'>
+                                <ul>
+                                  {data.features.map((d, dIndex) => {
+                                    return (
+                                      <>
+                                        <li key={dIndex}>
+                                          {d}
+                                        </li>
+
+                                      </>
+                                    );
+                                  })}
+                                </ul>
+                                {/* {data.features.join(',')} */}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                         <br />
-                        <h5 className=' d-flex justify-content-start'>
-                          <b>
+                        <div className=' d-flex justify-content-start align-items-center'>
+                          <h5 className='mx-2'>
 
-                            Features:
-                          </b>
-                          <p>
+                            <b style={{ color: '' }}>
 
-                            {data.features.join(',')}
-                          </p>
-                        </h5>
+                              Target date:
+                            </b>
+                          </h5>
+                          <div className=''>
+
+                            {formatDate(data.date)}
+                          </div>
+                        </div>
                         <br />
-                        <h5 className=' d-flex justify-content-start'>
-                          <b>
+                        <div className=' d-flex justify-content-start'>
+                          <h5 className='mx-2'>
 
-                            Target date:
-                          </b>
-                          <p>
+                            <b style={{ color: '' }}>
+                              Software:
+                            </b>
+                          </h5>
+                          <div>
 
-                            {data.date}
-                          </p>
-                        </h5>
-                        <br />
-                        <h5 className=' d-flex justify-content-start'>
-                          <b>
-                            Software:
-                          </b>
-                          {data.software}</h5>
+                            {data.software}
+                          </div>
+                        </div>
 
                         <div className='d-flex justify-content-end'>
 
-                          <button className='text-white btn btn-dark ' onClick={() => {
+                          <button className='text-white btn ' style={{ backgroundColor: "blueviolet" }} onClick={() => {
                             Navigate("/Developer/createsPatches", {
                               state: { data: data },
                             });
 
                           }}>
-
                             UPLOAD Patch
                           </button>
 
@@ -145,9 +195,9 @@ const DevelopergetsRequest = ({ RequestCount }) => {
           (
             <>
               <div>
-                <h4>
-                  Cuurently No Requests Available
-                </h4>
+                <b>
+                  Currently No Requests Available
+                </b>
               </div>
             </>
           )

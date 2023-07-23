@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './InitialPage2.css';
 import Image from '../images/image2.jpg';
 import { useNavigate } from 'react-router-dom';
-import LearnMore from './LearnMore';
+// import { useState } from 'react';
 const InitialPage = () => {
+  // const [Role,setRole]=useState('no');
   const Navigate = useNavigate();
   return (
     <>
@@ -17,9 +18,9 @@ const InitialPage = () => {
             <div className="col-md-6">
               <br /><br /><br />
               <div className="d-flex flex-column justify-content-center align-items-start">
-                <h1 className="text-white font-weight-normal" style={{ fontFamily: 'Arial', fontStyle: 'italic',   }}>Revolutionizing</h1>
-                <h1 className="text-white font-weight-normal" style={{ fontFamily: 'Arial', fontStyle: 'italic', }}>Patch Management</h1>
-                <h1 className="text-white font-weight-normal" style={{ fontFamily: 'Arial', fontStyle: 'italic',  }}>Using
+                <h1 className="text-white font-weight-normal" style={{ fontFamily: 'Arial',   }}>Revolutionizing</h1>
+                <h1 className="text-white font-weight-normal" style={{ fontFamily: 'Arial', }}>Patch Management</h1>
+                <h1 className="text-white font-weight-normal" style={{ fontFamily: 'Arial',  }}>Using
                 <span  className='mx-2' style={{color:"red"}}>
 
                  BlockChain
@@ -32,7 +33,9 @@ const InitialPage = () => {
                     </button>
                   </div>
                   <div>
-                    <button className="btn btn-light text-white  m-2" style={{ borderRadius: "25px", backgroundColor: 'rgb(180, 159, 205)', fontSize: '18px' }}>
+                    <button className="btn btn-light text-white  m-2" style={{ borderRadius: "25px", backgroundColor: 'rgb(180, 159, 205)', fontSize: '18px' }} onClick={()=>{
+                      Navigate('/Aboutus');
+                    }}>
                       <b>Learn More</b>
                     </button>
                   </div>
@@ -45,7 +48,6 @@ const InitialPage = () => {
           </div>
         </div>
       </div>
-      <br /><br /> <br /><br /><br /><br /><br />
       </div>
       
       {/* <div className=' p-5' style={{ backgroundColor: "rgb(155,114,207)" }}>
@@ -57,7 +59,6 @@ const InitialPage = () => {
           </div>
         </div>
       </div> */}
-      <LearnMore/>
     </>
   );
 };
@@ -65,53 +66,3 @@ const InitialPage = () => {
 export default InitialPage;
 
 
-
-
-// import React from 'react';
-// import './InitialPage2.css';
-// import Image from '../images/image2.jpg';
-// import { useNavigate } from 'react-router-dom';
-// import LearnMore from './LearnMore';
-
-// const InitialPage = () => {
-//   const Navigate = useNavigate();
-//   return (
-//     <>
-//       <div className=''>
-//       <div className="d-flex flex-row justify-content-center align-items-center p-5" style={{ position: 'absolute', backgroundColor:"rgb(0,0,0)",top: 0, left: 0, right: 0, bottom: 0, borderRadius: 0, overflowX: 'hidden' }}>
-//         <div className="container">
-//           <div className="row">
-//             <div className="col-md-6">
-//               <div className="d-flex flex-column justify-content-center align-items-start">
-//                 <h1 className="text-light font-weight-normal mb-0 custom-text-color" style={{ fontFamily: 'Arial', fontStyle: 'italic', color: 'rgb(180, 159, 205)' }}>Revolutionizing</h1>
-//                 <h1 className="text-light font-weight-normal mb-0 custom-text-color" style={{ fontFamily: 'Arial', fontStyle: 'italic', color: 'rgb(180, 159, 205)' }}>Patch Management</h1>
-//                 <h1 className="text-light font-weight-normal mb-0 custom-text-color" style={{ fontFamily: 'Arial', fontStyle: 'italic', color: 'rgb(180, 159, 205)' }}>Using Block Chain Technology</h1>
-//                 <div className="mt-4 d-flex flex-wrap">
-//                   <div className='mr-3'>
-//                     <button className="btn btn-light m-2" style={{ borderRadius: "25px", color: 'rgb(180, 159, 205)', fontSize: '18px' }} onClick={() => Navigate("/Login")}>
-//                       <b>Get Started</b>
-//                     </button>
-//                   </div>
-//                   <div>
-//                     <button className="btn btn-light text-white  m-2" style={{ borderRadius: "25px", backgroundColor: 'rgb(180, 159, 205)', fontSize: '18px' }}>
-//                       <b>Learn More</b>
-//                     </button>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//             <div className="col-md-6 d-flex align-items-center">
-//               <img src={Image} alt="image" className="img-fluid" />
-//             </div>
-//           </div>
-//         </div>
-        
-//       </div>
-//       </div>
-//       <br /><br /><br /><br /><br />
-//       <LearnMore />
-//     </>
-//   );
-// };
-
-// export default InitialPage;

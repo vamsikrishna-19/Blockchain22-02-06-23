@@ -24,29 +24,24 @@ const VerifiedPatches = () => {
     }
     
     const setTime = (timestamp) => {
-        const milliseconds = timestamp * 1000;
+        const milliseconds = Number(timestamp)* 1000;
         const dateObject = new Date(milliseconds);
         const formattedTime = dateObject.toLocaleString();
 
         return formattedTime;
     }
-    const downloadpatch = (fileData) => {
-        const fileBlob = new Blob([new Uint8Array(web3.utils.hexToBytes(fileData))], { type: 'application/octet-stream' });
-        const fileUrl = URL.createObjectURL(fileBlob);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = fileUrl;
-        downloadLink.download = 'file.txt';
-        downloadLink.click();
-    }
+    
     useEffect(() => {
         getdata();
     }, [contract2])
     useEffect(()=>{
-        if(dataArray.length>0){
-        $(function () {
-            $('#table1').DataTable();
-          });
-        }
+        setTimeout(()=>{
+            if(dataArray.length>0){
+            $(function () {
+                $('#table1').DataTable();
+              });
+            }
+        },1000)
     },[dataArray]);
     return (
         <>
@@ -58,8 +53,10 @@ const VerifiedPatches = () => {
                             <thead className="thead-dark">
                                 <tr>
                                     <th scope="col">S.No</th>
+                                    <th scope='col'>Request No</th>
                                     <th scope="col">Patch No</th>
-                                    <th scope="col">Download Patch</th>
+
+                                    {/* <th scope="col">Download Patch</th> */}
                                     <th scope="col">Patch Platform</th>
                                     <th scope="col">Patch Features</th>
                                     <th scope="col">Registered Time</th>
@@ -77,14 +74,12 @@ const VerifiedPatches = () => {
                                                         {dataIndex + 1}
                                                     </td>
                                                     <td>
-                                                        Patch- {data.patchno}
+                                                       Request No {Number(data.requestnumber)}
                                                     </td>
                                                     <td>
-                                                        <button className='btn' onClick={() => {
-                                                            downloadpatch(data.fileData);
-                                                        }
-                                                        }>Download</button>
+                                                        Patch- {Number(data.patchno)}
                                                     </td>
+                                                    
                                                     <td>
                                                         {data.patchplatform}
                                                     </td>

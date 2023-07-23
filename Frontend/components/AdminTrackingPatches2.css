@@ -1,0 +1,81 @@
+/* .custom-popover {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    width:250px;
+  }
+  .custom-popover-content {
+    color: #333;
+  }
+  .custom-popover-content h4 {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .custom-popover-content p {
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+   */
+
+/* 
+   .custom-popover {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+  }
+  
+  .custom-popover-content {
+    margin-bottom: 8px;
+  }
+  
+  .custom-popover h4 {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  
+  .custom-popover p {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #333;
+  }
+   */
+
+   .custom-popover {
+    position: absolute;
+    background-color: #eef0f2; /* Light gray background */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    display: flex;
+    justify-content: space-between; /* Distributes the sections evenly */
+  }
+  
+  .popover-section {
+    flex: 1; /* Each section takes an equal width */
+    margin-right: 12px; /* Adjust spacing between sections */
+  }
+  
+  .popover-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #2f3640; /* Dark gray text color */
+    text-transform: uppercase;
+  }
+  
+  .popover-text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #555; /* Slightly darker gray text color */
+  }
+  

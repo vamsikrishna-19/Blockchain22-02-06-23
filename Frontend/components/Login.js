@@ -3,7 +3,7 @@ import LogInImage from '../images/login-image.jpg';
 import Axios from 'axios';
 import './Login.css'
 import { useNavigate } from 'react-router-dom';
-const Login = ({role}) => {
+const Login = (props) => {
     const Navigate = useNavigate();
     const [Username, setUsername] = useState('');
     const [Password, setPassword] = useState('');
@@ -21,25 +21,33 @@ const Login = ({role}) => {
                 }
             });
             console.log(response);
-            const { token,Username,Role } = await response.data;
+            const { token, Username, Role } = await response.data;
             sessionStorage.setItem('token', token);
-            sessionStorage.setItem('Username',Username);
+            sessionStorage.setItem('Username', Username);
             setToken(token);
             console.log(token);
             sessionStorage.setItem("Role", Role);
-            role(Role);
+            props.role(Role);
             console.log(Role);
-            if (Role == 'Admin'){
+            if (Role == 'Admin') {
+                props.showAlert("Admin login successful", "success")
                 Navigate('/Admin'
                 );
             } else if (Role == 'Developer') {
+                props.showAlert("Developer login successful", "success")
                 Navigate('/Developer');
             } else if (Role == 'Labeller') {
+                props.showAlert("Labeller login successful", "success")
+
                 Navigate('/Labeller');
             } else if (Role == 'Verifier') {
+                props.showAlert("Verifier login successful", "success")
+
                 Navigate('/Verifier');
             } else {
                 // Handle other roles or redirect to a default route
+                props.showAlert("User login successful", "success")
+
                 Navigate('/EndUser');
             }
         }
@@ -47,10 +55,10 @@ const Login = ({role}) => {
             console.log(error);
             setToken(undefined);
         }
-       
+
 
     }
-
+    const [passwordVisible, setPasswordVisible] = useState(false)
     return (
         <div>
 
@@ -60,7 +68,12 @@ const Login = ({role}) => {
                     <div className=''>
 
                         <div className="row justify-content-center">
-                            <h2 className="form-title d-flex justify-content-center" style={{fontFamily: 'Arial', fontStyle: 'italic' }}>Login Form</h2>
+                            <h3 className="form-title d-flex justify-content-center" style={{ fontFamily: 'Arial', fontStyle: 'italic' }}>
+                                <b>
+
+                                Login Form
+                                </b>
+                                </h3>
 
                             <div className="col-md-5">
                                 <form className='registration-form container' id='registration-form'>
@@ -69,7 +82,7 @@ const Login = ({role}) => {
                                         <label htmlFor="Username" className='input-group-text'>
                                             <i className="zmdi zmdi-account-circle zmdi-hc-2x "></i>
                                         </label>
-                                        <input type="text" className="form-control" id='Username' placeholder="Enter Username" aria-label="Username" onChange={(e) => {
+                                        <input type="text" className="form-control" id='Username' placeholder="Enter Username" aria-label="Username"  onChange={(e) => {
                                             setUsername(e.target.value);
                                         }} aria-describedby="basic-addon1" />
                                     </div>
@@ -77,10 +90,20 @@ const Login = ({role}) => {
                                         <label htmlFor="Password" className='input-group-text'>
                                             <i className="zmdi zmdi-lock zmdi-hc-2x"></i>
                                         </label>
-                                        <input type="password" className="form-control" id='Password' placeholder="Enter password" aria-label="Password" onChange={(e) => {
+                                        <input type={passwordVisible ? "text" : "password"} className="form-control" id='Password' placeholder="Enter password" aria-label="Password"  onChange={(e) => {
                                             setPassword(e.target.value);
-                                            setToken("..");
+
                                         }} aria-describedby="basic-addon1" />
+                                        <label htmlFor="Password" className='input-group-text'
+                                        >
+
+                                            <i
+                                                className={`toggle-password zmdi  ${passwordVisible ? " zmdi-eye-off zmdi-hc-2x" : " zmdi-eye zmdi-hc-2x"}`}
+                                                onClick={() => {
+                                                    setPasswordVisible(!passwordVisible);
+                                                }}
+                                            ></i>
+                                        </label>
                                     </div>
                                     {
                                         token == undefined && (
@@ -91,8 +114,17 @@ const Login = ({role}) => {
                                             </div>
                                         )
                                     }
+                                    <br />
+                                    <div>
+                                        Don't have an account ?
+                                        <span className='mx-2 hover-button' style={{ color: "blue", cursor: "pointer" }} onClick={() => {
+                                            Navigate("/Signup")
+                                        }}>
+                                            Sign up
+                                        </span>
+                                    </div>
                                     <div className=" mt-4  d-flex justify-content-center">
-                                        <button className="btn btn-primary " type="button" onClick={handleSubmit} style={{borderColor:"rgb(180, 159, 205)"}}>Log In</button>
+                                        <button className="btn btn-primary " type="button" onClick={handleSubmit} style={{ borderColor: "rgb(180, 159, 205)" ,fontWeight:"bold"}}>Log In</button>
                                     </div>
                                 </form>
                             </div>

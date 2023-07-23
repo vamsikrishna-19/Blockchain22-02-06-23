@@ -6,24 +6,22 @@ const DevelopergetsRejectedPatches = () => {
   const Web3Contract = Web3Contract2();
   const contract2 = Web3Contract[0];
   const Navigate = useNavigate();
-  const [patchObject, setPatchObject] = useState({});
   const [requestNumberArr, setrequestNumberArr] = useState([]);
   const [requestNumberArr2, setrequestNumberArr2] = useState([]);
   // const [dataArray, setdataArray] = useState([]);
   const [dataArray2, setdataArray2] = useState([]);
   const [flag, setFlag] = useState(false);
+  const [patchObject, setPatchObject] = useState({});
   const getdata = async () => {
     try {
-      // await contract2.methods.getdetailsRequest().call().then((result) => {
-      // });
        contract2.methods.getdetails().call().then((res) => {
         // setdataArray(result);
         console.log(res.length + 1);
         console.log(res);
         setdataArray2(res);
         for (let i = 0; i < res.length; i++) {
-          setrequestNumberArr2((reqNo) => ([...reqNo, res[i].requestnumber]));
-          if (res[i].verificationstatus == "Verified" || res[i].verificationstatus == "IN PROGRESS") {
+          // setrequestNumberArr2((reqNo) => ([...reqNo, res[i].requestnumber]));
+          if(res[i].verificationstatus == "Verified" || res[i].verificationstatus == "IN PROGRESS") {
             setrequestNumberArr((reqNo) => ([...reqNo, res[i].requestnumber]));
           }
         }
@@ -37,14 +35,16 @@ const DevelopergetsRejectedPatches = () => {
     }
   }
   useEffect(() => {
-    getdata();
+    if(contract2){
+
+      getdata();
+    }
   }, [contract2]);
   useEffect(() => {
     // Check if there are any matching requests
     let flag = false;
     let count=0;
     for (let i = 0; i < dataArray2.length; i++) {
-
       const data = dataArray2[i];
       if (
         patchObject[data.requestnumber] === data.patchno &&
@@ -58,7 +58,6 @@ const DevelopergetsRejectedPatches = () => {
     setFlag(flag);
     console.log(count);
     // RejectedCount1(count);
-
   }, [dataArray2, requestNumberArr]);
   return (
     <div>
@@ -72,46 +71,65 @@ const DevelopergetsRejectedPatches = () => {
                 
                 return (
                   <>
-                    <div className='card'>
-                      <div className='card-header bg-dark text-white d-flex justify-content-start '>
+                    <div className='card' style={{ borderColor: "violet" }}>
+                      <div className='card-header  text-white d-flex justify-content-start ' style={{ backgroundColor: "darkblue" }}>
                         <h4>
                           
-                        Request-{data.requestnumber}
+                        Request No-{Number(data.requestnumber)}
                         </h4>
                       </div>
                       <br />
                       <div className='card-body'>
-                        <h5 className='card-title d-flex justify-content-start'>
-                          <b className='mx-2'>
-
+                        <div className=' d-flex justify-content-start'>
+                          <h5>
+                          <b className='mx-2'  style={{ color: '#' }}>
                             Patch Name:
                           </b>
-                          {data.patchname}</h5>
+                          </h5>
+                          <div>
+                          {data.patchname}
+                          </div>
+                          </div>
                         <br />
-                        <h5 className='card-title d-flex justify-content-start'>
-                          <b className='mx-2'>
+                        <div className=' d-flex justify-content-start'>
+                          <h5>
 
+                          <b className='mx-2' style={{ color: '#' }}>
                             Patch Features:
                           </b>
-                          {data.patchfeatures}</h5>
+                          </h5>
+                          <div>
+
+                          {data.patchfeatures}
+                          </div>
+                          </div>
                         <br />
-                        <h5 className='card-title d-flex justify-content-start'>
-                          <b className='mx-2'>
+                        <div className=' d-flex justify-content-start'>
+                          <h5>
+
+                          <b className='mx-2' style={{ color: '#' }}>
 
                             Rejected Due to:
                           </b>
-                          {data.rejectdescription}</h5>
-                        <br />
-                        <h5 className='card-title d-flex justify-content-start'>
-                          <b className='mx-2'>
+                          </h5>
+                          <div>
 
-                            Version:
+                          {data.rejectdescription}
+                          </div>
+                          </div>
+                        <br />
+                        <div className=' d-flex justify-content-start'>
+                          <h5>
+                          <b className='mx-2' style={{ color: '#' }}>
+                            Software:
                           </b>
-                          {data.version}</h5>
-                        <br />
-
+                          </h5>
+                          <div>
+                          {(data.patchplatform)}
+                          </div>
+                          </div>
                         <div className=' d-flex justify-content-end'>
-                          <button className='text-white btn btn-dark' onClick={() => {
+                          <button className='text-white btn' style={{ backgroundColor: "blueviolet" }} onClick={() => {
                             Navigate("/Developer/SolveRejectedPatches", {
                               state: { data: data },
                             });
@@ -119,8 +137,6 @@ const DevelopergetsRejectedPatches = () => {
                             UPLOAD Patch
                           </button>
                         </div>
-
-                        <br />
                       </div>
                     </div>
                     <br />
@@ -135,17 +151,17 @@ const DevelopergetsRejectedPatches = () => {
           </div>
 
         </div>
-        {/* {
+        {
               flag==false && (
                 <>
                   <div>
-                    <h4>
-                     Currently There are no rejected Patches Available
-                    </h4>
+                    <b>
+                     Currently there are no Rejected Patches Available
+                    </b>
                   </div>
                 </>
               )
-            } */}
+            }
       </div>
     </div>
   )
